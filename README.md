@@ -1,11 +1,11 @@
 # PKGenerator_Checker
 Generate Bitcoin Private Keys and check them against blockexplorer.com
 
-Stupid Python Script that Generates random private keys and checks them in realtime...call this poor mans Mining for BTC - same chances as solo but you could find an address w/ money in it :p  (This is for entertainment only and is designed to demonstrate how IMPOSSIBLE) it is to realistically get a collision and take control of someone else's coin...Credits to @Shlomi for the inspiration...
+Stupid Python Script that Generates random private keys and checks them in realtime...call this poor mans Mining for BTC - same chances as solo but you could find an address w/ money in it 🤑  (This is for entertainment only and is designed to demonstrate how IMPOSSIBLE) it is to realistically get a collision and take control of someone else's coin...Credits to @Shlomi for the inspiration...
 
 # Instructions
 
-<strong>BIG OL DISCLAIMER</strong>:  I cannot emphasize this enough - this is for DEMONSTRATION and ENTERTAINMENT purposes ... you will have much better success finding employment and buying bitcoin... to hold on than to have this find a populated private key with a balance.
+<strong>BIG OL DISCLAIMER</strong>:  I cannot emphasize this enough - this is for **DEMONSTRATION** and **ENTERTAINMENT** purposes ... you will have much better success finding employment and buying bitcoin... to hold on than to have this find a populated private key with a balance.
 
 1. Clone this script - download it or in the terminal use `git clone https://github.com/Frankenmint/PKGenerator_Checker/`
 2. Let's install some dependencies!  `pip install ecdsa hashlib base58 requests`
