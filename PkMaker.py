@@ -5,9 +5,26 @@ import ecdsa
 import hashlib
 import base58
 import requests
-# from time import sleep
+from time import sleep
 
 
+def ping_address(publicAddress):
+	"""
+	sends Request to a Block Explorer	
+	Main one is blockexplorer - seems to be UNLIMITED...using chain.so has a rate limiter
+	https://blockexplorer.com/api/addr/
+	balance =  pmts['balance']
+	https://chain.so/api/v2/get_address_balance/BTC/
+	balance =  pmts['data']['confirmed_balance']
+	"""
+
+	req = requests.get("https://blockexplorer.com/api/addr/"+publicAddress)
+	pmts = req.json()
+	balance =  pmts['balance']
+	print balance
+	if round(float(balance)) > 0:
+		print "Congratulations...alert the world cause you just made some sort of history friend!"
+	
 
 while True:
 	pk = os.urandom(32).encode("hex")
@@ -22,17 +39,17 @@ while True:
 	binary_address = networkAppend + checksum
 	publicAddress = base58.b58encode(binary_address)
 	print publicAddress
-	
-# Main one is blockexplorer - seems to be UNLIMITED...using chain.so has a rate limiter
-# https://blockexplorer.com/api/addr/
-# https://chain.so/api/v2/get_address_balance/BTC/
-# balance =  pmts['data']['confirmed_balance']
-	req = requests.get("https://blockexplorer.com/api/addr/"+publicAddress)
-	pmts = req.json()
-	balance =  pmts['balance']
-	print balance
-	# sleep (6) # If you get ValueError: No JSON object could be decoded use this
-	
+	while True:
+		try:
+			ping_address(publicAddress)	
+		except ValueError:
+			print "Aaaannnnd we got Timed Out"
+			print pk
+			print publicAddress
+			sleep(3)
+			continue
+
+		break
 
 # msg = "I own your Private Key for %s" %(publicAddress)
 # signed_msg = sk.sign(msg)
