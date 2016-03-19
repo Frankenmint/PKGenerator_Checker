@@ -5,7 +5,7 @@ import ecdsa
 import hashlib
 import base58
 import requests
-from time import sleep
+# from time import sleep
 
 
 
@@ -31,6 +31,7 @@ while True:
 	pmts = req.json()
 	balance =  pmts['balance']
 	print balance
+	# sleep (6) # If you get ValueError: No JSON object could be decoded use this
 	
 
 # msg = "I own your Private Key for %s" %(publicAddress)
