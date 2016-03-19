@@ -22,7 +22,7 @@ def ping_address(publicAddress):
 	pmts = req.json()
 	balance =  pmts['balance']
 	print balance
-	if round(float(balance)) > 0:
+	if float(balance) > 0.00000000:
 		print "Congratulations...alert the world cause you just made some sort of history friend!"
 	
 
