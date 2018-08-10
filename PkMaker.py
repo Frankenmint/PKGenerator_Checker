@@ -84,7 +84,7 @@ while True:
 			print "Aaaannnnd we got Timed Out"
 			print pk
 			print publicAddress
-			sleep(3)
+			time.sleep(3)
 			continue
 
 		break
