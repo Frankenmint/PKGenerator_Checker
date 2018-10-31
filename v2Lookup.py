@@ -49,12 +49,14 @@ def generatePage():
 
 
 def grabPks(pageNum):
-    req = requests.get("https://directory.io/"+str(pageNum))
-        tree = html.fromstring(req.text)
-        pk = tree.xpath("//*[@id]/span[1]//text()")
+    req = requests.get("https://www.bitcoinlist.io/"+str(pageNum))
+    tree = html.fromstring(req.text)
+    pk = tree.xpath("//*[@id]/span[1]//text()")
     resCmpress = tree.xpath("//*[@id]/a[3]//text()")
     resXtend = tree.xpath("//*[@id]/a[2]//text()")
-    return pk, resCmpress, resXtend
+    balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr[1]/td[4]")
+    #return pk, resCmpress, resXtend, balance
+    return tree
 
 
 while True:
@@ -65,33 +67,24 @@ while True:
             time.sleep(napLength)
             iterating = -1
         iterating +=1
-        resCmp = requests.get("https://blockchain.info/q/addressbalance/" +str(pkArray[1][i]))
-        endCmp =  resCmp.text
-        resXnd = requests.get("https://blockchain.info/q/addressbalance/" +str(pkArray[2][i]))
-        endExt =  resXnd.text
-        if "Illegal character   at position" not in endCmp:
-
-        if endCmp != "0" :
-            print ("endCmp = " + endCmp)
+        print(pkArray) 
+        raise SystemExit
+        # resCmp = requests.get("https://blockchain.info/q/addressbalance/" +str(pkArray[1][i]))
+        # endCmp =  resCmp.text
+        # resXnd = requests.get("https://blockchain.info/q/addressbalance/" +str(pkArray[2][i]))
+        # endExt =  resXnd.text
+        # if "Illegal character   at position" not in endCmp:
+        if pkArray[3] != "0" :
+            print ("bal = " + pkArray[3])
             print("We may have found something! check out Private Key {0}, for compressed Address {1}".format(pkArray[0][i], pkArray[1][i]))
             send_email("myemail@gmail.com", "myemail@gmail.com", "check out Private Key {0}, for Adress {1}, and {2}".format(pkArray[0][i], pkArray[1][i], pkArray[2][i] ))
             raise SystemExit
-
-
-    if "Illegal character   at position" not in endExt:
-
-        if endExt != "0" :
-            print ("endExt = " + endExt)
-            print("We may have found something! check out Private Key {0}, for extended Address {1}".format(pkArray[0][i], pkArray[2][i]))
-            send_email("myemail@gmail.com", "myemail@gmail.com", "check out Private Key {0}, for Adress {1}, and {2}".format(pkArray[0][i], pkArray[1][i], pkArray[2][i] ))
-            raise SystemExit
-
-    print ("Ext: {0}, Stndrd {1}".format(endExt, endCmp))
+    # print ("Ext: {0}, Stndrd {1}".format(endExt, endCmp))
 
 
 ''' HEY THERE PIRATE!
 
-THIS IS A 2017 FACELIFT TO THE TOY APP POOR MANS MINING.
+THIS IS A 2017... no... 2018 FACELIFT TO THE TOY APP POOR MANS MINING.
 HUNT THEM 2010 ERA COINS!!!!  Currently the Script uses Directory.IO
 and blockchain.info to parse (at random) the entire sha256 keylist page by page
 256 different lookups per page (1 for compressesed public address one for standard.
