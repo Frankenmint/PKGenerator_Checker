@@ -52,13 +52,14 @@ def generatePage():
 
 
 def grabPks(pageNum):
+    # cloudflare blocks bots...use scraper library to get around this or build your own logic to store and use a manually generated cloudflare session cookie... 
     # req = requests.get("https://www.bitcoinlist.io/"+str(pageNum))
     req = scraper.get("https://www.bitcoinlist.io/"+str(pageNum)).content
     tree = html.fromstring(req)
-    pk = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr[1]/td[1]/small/text()")
-    resCmpress = tree.xpath("//*[@id]/a[3]//text()")
-    resXtend = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr[1]/td[2]/small/a//text()")
-    balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr[1]/td[4]/font//text()")
+    pk = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[1]/small/text()")
+    resCmpress = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[3]/small/a//text()")
+    resXtend = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[2]/small/a//text()")
+    balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[4]/font//text()")
     print(balance)
     print(pk)
     print(resXtend)
@@ -67,20 +68,12 @@ def grabPks(pageNum):
 while True:
     pkArray = grabPks(generatePage())
     for i in range(len(pkArray[0])):
-        if (iterating >= iterLimits):
-            print("taking a {0} second Nap..ZZZzzzzz".format(napLength))
-            time.sleep(napLength)
-            iterating = -1
-        iterating +=1
-        print(pkArray) 
-        raise SystemExit
-        # resCmp = requests.get("https://blockchain.info/q/addressbalance/" +str(pkArray[1][i]))
-        # endCmp =  resCmp.text
-        # resXnd = requests.get("https://blockchain.info/q/addressbalance/" +str(pkArray[2][i]))
-        # endExt =  resXnd.text
-        # if "Illegal character   at position" not in endCmp:
-        if pkArray[3] != "0" :
-            print ("bal = " + pkArray[3])
+        thisBalance = pkArray[3][i]
+        print(thisBalance)
+        if(thisBalance == ' 0'):
+            continue
+        else:
+            print ("balance = " + thisBalance)
             print("We may have found something! check out Private Key {0}, for compressed Address {1}".format(pkArray[0][i], pkArray[1][i]))
             send_email("myemail@gmail.com", "myemail@gmail.com", "check out Private Key {0}, for Adress {1}, and {2}".format(pkArray[0][i], pkArray[1][i], pkArray[2][i] ))
             raise SystemExit
