@@ -2,7 +2,6 @@
 
 import time
 import logging
-import requests
 from lxml import html
 from random import randint
 import cfscrape
@@ -60,9 +59,7 @@ def grabPks(pageNum):
     resCmpress = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[3]/small/a//text()")
     resXtend = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[2]/small/a//text()")
     balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[4]/font//text()")
-    # print(balance)
-    # print(pk)
-    # print(resXtend)
+
     return pk, resCmpress, resXtend, balance
 
 while True:
