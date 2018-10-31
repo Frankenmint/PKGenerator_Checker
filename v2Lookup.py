@@ -5,11 +5,14 @@ import logging
 import requests
 from lxml import html
 from random import randint
+import cfscrape
 
 
 iterating = 0
 napLength = 3 # time in seconds to sleep for
 iterLimits = 1000 # how many API lookups till we take a Nap
+scraper = cfscrape.create_scraper()
+
 
 from smtplib import SMTP_SSL as SMTP
 from time import sleep
@@ -49,15 +52,17 @@ def generatePage():
 
 
 def grabPks(pageNum):
-    req = requests.get("https://www.bitcoinlist.io/"+str(pageNum))
-    tree = html.fromstring(req.text)
-    pk = tree.xpath("//*[@id]/span[1]//text()")
+    # req = requests.get("https://www.bitcoinlist.io/"+str(pageNum))
+    req = scraper.get("https://www.bitcoinlist.io/"+str(pageNum)).content
+    tree = html.fromstring(req)
+    pk = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr[1]/td[1]/small/text()")
     resCmpress = tree.xpath("//*[@id]/a[3]//text()")
-    resXtend = tree.xpath("//*[@id]/a[2]//text()")
-    balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr[1]/td[4]")
-    #return pk, resCmpress, resXtend, balance
-    return tree
-
+    resXtend = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr[1]/td[2]/small/a//text()")
+    balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr[1]/td[4]/font//text()")
+    print(balance)
+    print(pk)
+    print(resXtend)
+    return pk, resCmpress, resXtend, balance
 
 while True:
     pkArray = grabPks(generatePage())
