@@ -52,7 +52,7 @@ def generatePage():
 
 
 def grabPks(pageNum):
-    # cloudflare blocks bots...use scraper library to get around this or build your own logic to store and use a manually generated cloudflare session cookie... 
+    # cloudflare blocks bots...use scraper library to get around this or build your own logic to store and use a manually generated cloudflare session cookie... I don't care 😎
     # req = requests.get("https://www.bitcoinlist.io/"+str(pageNum))
     req = scraper.get("https://www.bitcoinlist.io/"+str(pageNum)).content
     tree = html.fromstring(req)
@@ -60,16 +60,16 @@ def grabPks(pageNum):
     resCmpress = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[3]/small/a//text()")
     resXtend = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[2]/small/a//text()")
     balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[4]/font//text()")
-    print(balance)
-    print(pk)
-    print(resXtend)
+    # print(balance)
+    # print(pk)
+    # print(resXtend)
     return pk, resCmpress, resXtend, balance
 
 while True:
     pkArray = grabPks(generatePage())
     for i in range(len(pkArray[0])):
         thisBalance = pkArray[3][i]
-        print(thisBalance)
+        print( "PK: {0} Addr: {1}  Balance: {2}".format(pkArray[0][i], pkArray[1][i], thisBalance))
         if(thisBalance == ' 0'):
             continue
         else:
