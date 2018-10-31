@@ -35,8 +35,9 @@ def ping_address(publicAddress):
 	balance =  pmts['data']['confirmed_balance']
 	"""
 
-	req = requests.get("https://blockexplorer.com/api/addr/"+publicAddress)
+	req = requests.get("https://bitaps.com/api/address/"+publicAddress)
 	pmts = req.json()
+	# print pmts
 	balance =  pmts['balance']
 	print balance
 
