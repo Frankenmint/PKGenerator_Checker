@@ -87,7 +87,9 @@ while True:
 			print publicAddress
 			time.sleep(3)
 			continue
-
+		except KeyError:
+			print "we may be denied or something, keep the script moving"
+			time.sleep(10)			
 		break
 
 # msg = "I own your Private Key for %s" %(publicAddress)
