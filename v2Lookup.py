@@ -57,16 +57,19 @@ def grabPks(pageNum):
     # cloudflare blocks bots...use scraper library to get around this or build your own logic to store and use a manually generated cloudflare session cookie... I don't care 😎
     # req = requests.get("https://www.bitcoinlist.io/"+str(pageNum))
     req = scraper.get("https://www.bitcoinlist.io/"+str(pageNum)).content
-
     if(req == b'Rate Limit Exceeded'):
-        grabPks(pageNum)
+        print("adjust the rate limiting because they're blocking us :(")
+        manPenalty = napLength * 3
+        print("manually sleeping for {} seconds".format(manPenalty))
+        time.sleep(manPenalty)
+        print("okay let's try again... NOW SERVING {}".format(pageNum))
+        return grabPks(pageNum)
     else:
         tree = html.fromstring(req)
         pk = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[1]/small/text()")
         resCmpress = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[3]/small/a//text()")
         resXtend = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[2]/small/a//text()")
         balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[4]/font//text()")
-        #print(req)
         return pk, resCmpress, resXtend, balance
 
 
