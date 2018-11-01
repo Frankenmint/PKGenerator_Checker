@@ -13,8 +13,8 @@ print("---------------------------------------")
 
 scraper = cfscrape.create_scraper()
 iterating = 0
-napLength = 1 # time in seconds to sleep for
-iterLimits = 10000 # how many API lookups till we take a Nap
+napLength = 15 # time in seconds to sleep for
+iterLimits = 7 # how many API lookups till we take a Nap
 
 from smtplib import SMTP_SSL as SMTP
 from time import sleep
