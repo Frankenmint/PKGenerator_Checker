@@ -42,9 +42,12 @@ def ping_address(publicAddress):
 	print balance
 
 	# "WifKey", "HexKey", "PublicAddress", "PublicKey", "Balance"
+	#Comment out this line if you wish to NOT record blank keys
 	logging.info (''+ time.strftime("%m-%d-%y %H:%M:%S") +','+ wif +','+publicAddress)
 
 	if float(balance) > 0.00000000:
+		logging.info (''+ time.strftime("%m-%d-%y %H:%M:%S") +','+ wif +','+publicAddress)
+		
 		print "Congratulations...alert the world cause you just made some sort of history friend!"
 
 

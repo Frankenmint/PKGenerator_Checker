@@ -7,11 +7,14 @@ from random import randint
 import cfscrape
 
 
-iterating = 0
-napLength = 3 # time in seconds to sleep for
-iterLimits = 1000 # how many API lookups till we take a Nap
-scraper = cfscrape.create_scraper()
+print("\n\nLookup keys @RANDOM via bitcoinlist.io!")
+print("---------------------------------------")
+print("---------------------------------------")
 
+scraper = cfscrape.create_scraper()
+iterating = 0
+napLength = 1 # time in seconds to sleep for
+iterLimits = 10000 # how many API lookups till we take a Nap
 
 from smtplib import SMTP_SSL as SMTP
 from time import sleep
@@ -54,25 +57,38 @@ def grabPks(pageNum):
     # cloudflare blocks bots...use scraper library to get around this or build your own logic to store and use a manually generated cloudflare session cookie... I don't care 😎
     # req = requests.get("https://www.bitcoinlist.io/"+str(pageNum))
     req = scraper.get("https://www.bitcoinlist.io/"+str(pageNum)).content
-    tree = html.fromstring(req)
-    pk = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[1]/small/text()")
-    resCmpress = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[3]/small/a//text()")
-    resXtend = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[2]/small/a//text()")
-    balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[4]/font//text()")
 
-    return pk, resCmpress, resXtend, balance
+    if(req == b'Rate Limit Exceeded'):
+        grabPks(pageNum)
+    else:
+        tree = html.fromstring(req)
+        pk = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[1]/small/text()")
+        resCmpress = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[3]/small/a//text()")
+        resXtend = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[2]/small/a//text()")
+        balance = tree.xpath("/html/body/div[1]/div[3]/div[4]/div/div/div[2]/table/tbody/tr/td[4]/font//text()")
+        #print(req)
+        return pk, resCmpress, resXtend, balance
+
+
 
 while True:
-    pkArray = grabPks(generatePage())
+    muhPage = generatePage()
+    if (iterating >= iterLimits):
+        print("\ntaking a {0} second Nap..ZZZzzzzz".format(napLength))
+        time.sleep(napLength)
+        iterating = -1
+    iterating +=1
+    print ("\nNOW SERVING {}\n".format(muhPage))
+    pkArray = grabPks(muhPage)
     for i in range(len(pkArray[0])):
         thisBalance = pkArray[3][i]
-        print( "PK: {0} Addr: {1}  Balance: {2}".format(pkArray[0][i], pkArray[1][i], thisBalance))
+        print( "PK: {0} Addr: {1}  Balance: {2}".format(pkArray[0][i][-10:], pkArray[1][i][:7], thisBalance))
         if(thisBalance == ' 0'):
             continue
         else:
             print ("balance = " + thisBalance)
             print("We may have found something! check out Private Key {0}, for compressed Address {1}".format(pkArray[0][i], pkArray[1][i]))
-            send_email("myemail@gmail.com", "myemail@gmail.com", "check out Private Key {0}, for Adress {1}, and {2}".format(pkArray[0][i], pkArray[1][i], pkArray[2][i] ))
+            send_email("myemail@gmail.com", "myemail@gmail.com", "check out Private Key {0}, for Adress {1}, and {2}. Found a balance of {3}".format(pkArray[0][i], pkArray[1][i], pkArray[2][i], thisBalance ))
             raise SystemExit
     # print ("Ext: {0}, Stndrd {1}".format(endExt, endCmp))
 
