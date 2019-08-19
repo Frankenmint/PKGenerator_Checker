@@ -8,6 +8,7 @@ import requests
 import time
 from smtplib import SMTP_SSL as SMTP
 import logging
+import blockcypher
 
 
 wif = ""
@@ -28,17 +29,10 @@ def ping_address(publicAddress):
 
 	"""
 	sends Request to a Block Explorer	
-	Main one is blockexplorer - seems to be UNLIMITED...using chain.so has a rate limiter
-	https://blockexplorer.com/api/addr/
-	balance =  pmts['balance']
-	https://chain.so/api/v2/get_address_balance/BTC/
-	balance =  pmts['data']['confirmed_balance']
+	Use blockcypher Python package to fetch unlimited balances...
 	"""
-
-	req = requests.get("https://bitaps.com/api/address/"+publicAddress)
-	pmts = req.json()
-	# print pmts
-	balance =  pmts['balance']
+	
+	balance = blockcypher.get_total_balance(publicAddress)
 	print balance
 
 	# "WifKey", "HexKey", "PublicAddress", "PublicKey", "Balance"
@@ -46,7 +40,7 @@ def ping_address(publicAddress):
 	logging.info (''+ time.strftime("%m-%d-%y %H:%M:%S") +','+ wif +','+publicAddress)
 
 	if float(balance) > 0.00000000:
-		logging.info (''+ time.strftime("%m-%d-%y %H:%M:%S") +','+ wif +','+publicAddress)
+		logging.info (''+ time.strftime("%m-%d-%y %H:%M:%S") +','+ wif +','+publicAddress+' ,balance '+balance)
 		
 		print "Congratulations...alert the world cause you just made some sort of history friend!"
 
