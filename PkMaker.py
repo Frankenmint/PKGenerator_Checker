@@ -55,7 +55,7 @@ def ping_address(publicAddress):
 		
 		print( "Congratulations...alert the world cause you just made some sort of history friend!" )
 		print(wif.decode('utf-8'))
-			with open('results.txt', 'a+') as f:
+		with open('results.txt', 'a+') as f:
 			f.write(''+ time.strftime("%m-%d-%y %H:%M:%S") +','+ wif.decode('utf-8') +','+publicAddress+' ,balance '+str(balance))
 			f.close
 
