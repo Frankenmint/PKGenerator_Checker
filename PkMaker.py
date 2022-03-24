@@ -20,7 +20,7 @@ logging.basicConfig(filename='BTC_PrivateKeys_'+time.strftime("%Y-%m-%d-%H-%M")+
 level=logging.INFO, format='%(message)s', datefmt='%Y-%m-%d,%H:%M:%S')
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("blockcypher").setLevel(logging.WARNING)
-logging.info ('"Timestamp", "WifKey", "PublicAddress"')
+logging.info ('"Date" "Time" "Key" "PublicAddress" "Transactions"')
 
 
 
@@ -40,15 +40,17 @@ def ping_address(publicAddress):
 
 	if resp.ok:
 		ourJSON = resp.json()
+		trans = dict(ourJSON['chain_stats'])['tx_count']
 		balance = dict(ourJSON['chain_stats'])['funded_txo_sum']
 		print( balance )
 
 	else:
 		print(resp.text)
 		raise ValueError("cannot reach block explorer for balance", resp)
+   
 	# "WifKey", "HexKey", "PublicAddress", "PublicKey", "Balance"
 	#Comment out this line if you wish to NOT record blank keys
-	logging.info (''+ time.strftime("%m-%d-%y %H:%M:%S") +','+ wif.decode('utf-8') +','+ publicAddress)
+	logging.info (time.strftime("%d-%m-%y %H:%M ") + wif.decode('utf-8') +" "+ publicAddress +" "+ str(trans))
 
 	if float(balance) > 0.00000000:
 		logging.info (''+ time.strftime("%m-%d-%y %H:%M:%S") +','+ wif.decode('utf-8') +','+publicAddress+' ,balance '+str(balance))
